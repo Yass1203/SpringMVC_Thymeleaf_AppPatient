@@ -6,11 +6,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.annotation.Bean;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.Date;
 
 @SpringBootApplication
-public class PatientAppApplication implements CommandLineRunner {
+public class PatientAppApplication {
     @Autowired
     private PatientRepository patientRepository;
 
@@ -18,11 +21,19 @@ public class PatientAppApplication implements CommandLineRunner {
         SpringApplication.run(PatientAppApplication.class, args);
     }
 
-    @Override
-    public void run(String... args) throws Exception {
-
-        patientRepository.save(new Patient(null ,"Mohammed" ,new Date() , false , 35));
-        patientRepository.save(new Patient(null ,"Yassine" ,new Date() , true , 47));
-        patientRepository.save(new Patient(null ,"Amine" ,new Date() , false , 85));
+    //@Bean
+    CommandLineRunner commandLineRunner(PatientRepository patientRepository) {
+        return args -> {
+            patientRepository.save(new Patient(null ,"Mohammed" ,new Date() , false , 711));
+            patientRepository.save(new Patient(null ,"Yassine" ,new Date() , true , 470));
+            patientRepository.save(new Patient(null ,"Amine" ,new Date() , false , 185));
+        };
     }
+    @Bean
+    PasswordEncoder passwordEncoder(){
+        return new BCryptPasswordEncoder();
+
+    }
+
+
 }
