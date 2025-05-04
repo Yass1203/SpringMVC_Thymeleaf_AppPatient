@@ -16,7 +16,7 @@
         <div class="card shadow">
             <div class="card-header bg-primary text-white fw-bold">Liste des Patients</div>
             <div class="card-body">
-                <form method="get" th:action="@{index}" class="row g-2 align-items-center mb-4">
+                <form method="get" th:action="@{/user/index}" class="row g-2 align-items-center mb-4">
                     <div class="col-auto">
                         <label class="form-label">Keyword</label>
                         <input type="text" name="keyword" class="form-control" placeholder="Rechercher...">
@@ -36,7 +36,7 @@
                         <th>Date</th>
                         <th>Malade</th>
                         <th>Score</th>
-                        <th>Actions</th>
+                        <th th:if="${#authorization.expression('hasRole(''ADMIN'')')}" >Actions</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -46,15 +46,15 @@
                         <td th:text="${patient.dateNaissance}"></td>
                         <td th:text="${patient.malade}"></td>
                         <td th:text="${patient.score}"></td>
-                        <td>
+                        <td th:if="${#authorization.expression('hasRole(''ADMIN'')')}">
                             <a onclick="return confirm('Êtes-vous sûr ?')"
-                               th:href="@{delete(id=${patient.id}, keyword=${keyword}, page=${currentPage})}"
+                               th:href="@{/admin/delete(id=${patient.id}, keyword=${keyword}, page=${currentPage})}"
                                class="btn btn-sm btn-danger">
                                 <i class="bi bi-trash"></i>
                             </a>
                         </td>
-                        <td>
-                            <a  class=" btn btn-success" th:href="@{editPatient(id=${patient.id},keyword=${keyword}, page=${currentPage})}">
+                        <td th:if="${#authorization.expression('hasRole(''ADMIN'')')}" >
+                            <a  class=" btn btn-success" th:href="@{/admin/editPatient(id=${patient.id},keyword=${keyword}, page=${currentPage})}">
                             Edit
                              </a>
                         </td>
@@ -67,7 +67,7 @@
                     <ul class="pagination flex-wrap">
                         <li class="page-item" th:each="page,status : ${pages}">
                             <a class="page-link"
-                               th:href="@{/index(page=${status.index},keyword=${keyword})}"
+                               th:href="@{/user/index(page=${status.index},keyword=${keyword})}"
                                th:classappend="${currentPage==status.index} ? ' active' : ''"
                                th:text="${status.index}">
                             </a>

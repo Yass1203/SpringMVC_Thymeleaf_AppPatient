@@ -9,6 +9,10 @@ import org.springframework.security.core.userdetails.User;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.access.AccessDeniedHandler;
+import org.springframework.security.web.access.AccessDeniedHandlerImpl;
+
+import java.nio.file.AccessDeniedException;
 
 @Configuration
 @EnableWebSecurity
@@ -27,11 +31,23 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
         return httpSecurity
-                .formLogin(Customizer.withDefaults())
-                .authorizeHttpRequests(ar->ar.requestMatchers("/deletePatient/**").hasRole("ADMIN"))
-                .authorizeHttpRequests(ar->ar.requestMatchers("/admin/**").hasRole("ADMIN"))
-                .authorizeHttpRequests(ar->ar.requestMatchers("/user/**").hasRole("USER"))
-                .authorizeHttpRequests(ar->ar.anyRequest().authenticated())
+                .formLogin(form -> form.loginPage("/login").permitAll())
+                .authorizeHttpRequests(auth -> {
+                    auth.requestMatchers("/deletePatient/**").hasRole("ADMIN");
+                    auth.requestMatchers("/admin/**").hasRole("ADMIN");
+                    auth.requestMatchers("/user/**").hasRole("USER");
+                    auth.anyRequest().authenticated();
+                })
+                .exceptionHandling(exception ->
+                        exception.accessDeniedHandler(accessDeniedHandler())
+                )
                 .build();
     }
+    @Bean
+    public AccessDeniedHandler accessDeniedHandler() {
+        AccessDeniedHandlerImpl accessDeniedHandler = new AccessDeniedHandlerImpl();
+        accessDeniedHandler.setErrorPage("/notAuthorized");
+        return accessDeniedHandler;
+    }
+
 }

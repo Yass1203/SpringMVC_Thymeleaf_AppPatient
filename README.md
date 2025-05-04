@@ -80,7 +80,43 @@ le mécanisme sécurisé de Spring Security (le bouton utilisant une requête PO
 
 <img src="captures/logout.png">
 
+### Droits d’accès et Roles :
+* La gestion des accès et des rôles est un aspect indispensable dans la gestion des utilisateurs, afin de préserver la sécurité, notamment la confidentialité.
 
+* Pour cela, il faut créer une méthode dans la classe SecurityConfig comme suit :
+
+  <img src="captures/securityRole.png">
+***** 
+### Note :
+* Après l'ajout des rôles, il est nécessaire de modifier les chemins (paths) et les redirections, afin d'éviter des erreurs d'accès.
+***** 
+* Désormais, si un utilisateur standard tente de modifier ou de supprimer, une erreur 403 s'affichera, ce qui signifie "non autorisé".
+
+<img src="captures/erro403.png">
+
+#### - Pour éviter cette confusion, il est préférable d'utiliser la contextualisation afin de masquer les fonctionnalités non nécessaires pour un utilisateur.
+*  Pour chaque fonctionnalité que l'on souhaite masquer, on ajoute une expression nommée authorization.expression.
+<img src="captures/contex.png">
+******* 
+#### En tant qu'utilisateur" :
+<img src="captures/userrole.png"> 
+
+* On remarque que les fonctionnalités edit et supprimer sont masqué pour un utilisateur ordinaire.
+
+#### En tant qu'admin : 
+<img src="captures/adminrole.png">
+
+* On remarque que les fonctionnalités edit et supprimer ne sont masqué pas pour un utilisateur avec un role Admin.
+
+#### Personnaliser le formulaire LOG IN :
+* Si l'on souhaite personnaliser le formulaire de connexion, il faut utiliser la méthode loginPage dans formLogin, dans la classe SecurityConfig, comme suit :
+
+    <img src="captures/formlogin.png">
+  
+
+* Il faut également créer une méthode dans la classe SecurityController pour gérer la redirection vers la page de connexion personnalisée :
+
+    <img src="captures/logget.png">
 
 
 
