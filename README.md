@@ -98,6 +98,7 @@ le mécanisme sécurisé de Spring Security (le bouton utilisant une requête PO
 *  Pour chaque fonctionnalité que l'on souhaite masquer, on ajoute une expression nommée authorization.expression.
 <img src="captures/contex.png">
 ******* 
+
 #### En tant qu'utilisateur" :
 <img src="captures/userrole.png"> 
 
