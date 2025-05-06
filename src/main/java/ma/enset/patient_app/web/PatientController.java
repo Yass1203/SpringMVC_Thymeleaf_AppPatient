@@ -8,6 +8,7 @@ import ma.enset.patient_app.repository.PatientRepository;
 import org.springframework.boot.context.properties.bind.DefaultValue;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -74,6 +75,7 @@ public class PatientController {
     }
 
     @GetMapping("/admin/editPatient")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public String editPatient(Model model , Long id , String keyword , int page ){
        Patient patient = patientRepository.findById(id).orElse(null);
        if(patient == null) throw new RuntimeException("Patient not found");

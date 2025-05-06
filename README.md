@@ -28,12 +28,24 @@ Login Interface:
 * Il faut creer une classe de configuration SecurityConfig :
 
 #### InMemomy Authentication: 
-Pour définir les utilisateurs qui ont le droit d’accéder à l’application, il faut spécifier où Spring Security va chercher les utilisateurs.
+* Pour définir les utilisateurs ayant le droit d’accéder à l’application, il faut spécifier où Spring Security va chercher ces utilisateurs.
 
-Parmi les méthodes, il y a la méthode Authentication consistant à préciser en mémoire quels sont les utilisateurs autorisés à accéder à l’application.
-    
+* Parmi les méthodes disponibles, il y a l’authentification en mémoire, qui consiste à définir directement dans le code quels sont les utilisateurs autorisés à accéder à l’application.
 <img src="captures/classSec.png">
 
+
+* Il existe également une méthode permettant de protéger les méthodes via des annotations. Il suffit d’ajouter l’annotation @EnableMethodSecurity(prePostEnabled = true).
+
+* Au niveau des contrôleurs, il faut spécifier quelles méthodes doivent être protégées et avec quels rôles elles doivent être accessibles.
+
+### EXEMPLE :
+<img src="captures/roleAdmin.png">
+
+* Après avoir ajouté l’annotation @PreAuthorize("hasRole('ROLE_ADMIN')"), seuls les administrateurs pourront exécuter cette méthode.
+
+#### Note :
+* Cette méthode de sécurité permet d’éviter l’escalade de privilèges. Elle empêche les utilisateurs non autorisés d’accéder à des fonctionnalités qui ne leur sont pas destinées.
+### Encodeur SprintSecurity :
 * Spring Security utilise par défaut un encodeur de mots de passe (hasher).
 Pour indiquer qu’un mot de passe n’est pas haché, on peut ajouter le préfixe {noop} devant le mot de passe.
 
@@ -118,6 +130,15 @@ le mécanisme sécurisé de Spring Security (le bouton utilisant une requête PO
 * Il faut également créer une méthode dans la classe SecurityController pour gérer la redirection vers la page de connexion personnalisée :
 
     <img src="captures/logget.png">
+
+  * Comme par défaut, tout accès aux ressources nécessite une authentification, il faut ajouter une autorisation pour permettre au formulaire d'accéder aux ressources Bootstrap.
+
+        auth.requestMatchers("/webjars/**").permitAll(); 
+
+#### - Formulaire Login Personnalisé : 
+
+<img src="captures/loginperso.png">
+
 
 
 

@@ -32,7 +32,13 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
         return httpSecurity
                 .formLogin(form -> form.loginPage("/login").permitAll())
+                .rememberMe(remember -> remember
+                        .key("aVerySecureKey") // Change this to a real secret in production
+                        .rememberMeParameter("remember-me")
+                        .tokenValiditySeconds(1209600)
+                )
                 .authorizeHttpRequests(auth -> {
+                    auth.requestMatchers("/webjars/**").permitAll();
                     auth.requestMatchers("/deletePatient/**").hasRole("ADMIN");
                     auth.requestMatchers("/admin/**").hasRole("ADMIN");
                     auth.requestMatchers("/user/**").hasRole("USER");
