@@ -24,10 +24,10 @@ Login Interface:
 #### NOTES: 
 * Cette configuration est juste pour la periode de developement.
 
-### Personnalisé la configuration de spring securité: 
-* Il faut creer une classe de configuration SecurityConfig :
+### Personnalisé la configuration de spring security: 
+* Il faut creé une classe de configuration SecurityConfig :
 
-#### InMemomy Authentication: 
+### In Memory Authentication: 
 * Pour définir les utilisateurs ayant le droit d’accéder à l’application, il faut spécifier où Spring Security va chercher ces utilisateurs.
 
 * Parmi les méthodes disponibles, il y a l’authentification en mémoire, qui consiste à définir directement dans le code quels sont les utilisateurs autorisés à accéder à l’application.
@@ -139,10 +139,72 @@ le mécanisme sécurisé de Spring Security (le bouton utilisant une requête PO
 
 <img src="captures/loginperso.png">
 
+### JDBC Authentication : 
+* C’est une stratégie présente dans Spring Security depuis longtemps, qui permet de stocker les utilisateurs dans une base de données relationnelle via un accès JDBC.
+* Il s’agit d’un modèle simplifié qui consiste à connecter Spring Security à une base de données relationnelle, dans laquelle Spring Security pourra retrouver les utilisateurs ainsi que leurs rôles.
+
+#### COMMENT UTILISER JDBC Authentication : 
+
+* Premièrement, on crée une méthode qui retourne un objet JdbcUserDetailsManager, dans laquelle on établit la liaison avec la base de données via l’injection de l’objet DataSource.
+---
+<img src="captures/jdbc.png">
+
+---
+* Ensuite, il faut créer deux tables : une table pour les utilisateurs et une autre pour les rôles. Ces deux tables doivent avoir une structure reconnue par Spring Security.
+Pour cela, il est recommandé de récupérer la structure officielle depuis la dépendance spring-security-core (org.springframework.security:spring-security-core) en recherchant le fichier users.ddl.
+
+#### Pour la création des tables, deux méthodes sont possibles :
+* Créer manuellement les tables via l’interface phpMyAdmin.
+
+* Créer un fichier SQL dans le dossier resources, nommé schema.sql, contenant la structure des tables.
+
+----
+<img src="captures/sql.png">
+
+----
+
+* Enfin, il faut ajouter les deux options suivantes dans le fichier application.properties :
+        
+        < spring.datasource.schema=classpath:schema.sql >
+        < spring.sql.init.mode=always >
+
+### Créations des utilisateurs : 
+
+Pour initialiser des utilisateurs et rôles dès le démarrage de l’application, on peut créer une méthode "CommandLineRunner" dans la classe `PatientAppApplication`.
+
+### 💡 Objectif
+
+Grâce à l’injection de l’objet `JdbcUserDetailsManager`, on peut utiliser directement ses méthodes pour :
+- Créer des utilisateurs
+- Ajouter des rôles
+- Chercher ou supprimer des utilisateurs
+
+👉 **Il n'est donc pas nécessaire de créer des `Repository` manuellement** pour gérer les utilisateurs et leurs rôles. L’interface `JdbcUserDetailsManager` fournit déjà tout ce qu’il faut.
+
+---
+<img src="captures/commandrunn.png">
+
+---
+
+### Visualisation des utilisateurs dans la base de données :
+#### TABLE USERS :
+
+<img src="captures/user.png">
+
+----
+
+#### TABLE AUTHORITY : 
+
+<img src="captures/role.png">
+
+------- 
+
+#### EXEMPLE D'AUTHENTIFICATION :
 
 
+<img src="captures/user12.png">
 
- 
+-----
 
 
 

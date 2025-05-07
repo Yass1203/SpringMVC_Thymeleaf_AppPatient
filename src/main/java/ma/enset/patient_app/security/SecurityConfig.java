@@ -8,10 +8,12 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
+import org.springframework.security.provisioning.JdbcUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.security.web.access.AccessDeniedHandlerImpl;
 
+import javax.sql.DataSource;
 import java.nio.file.AccessDeniedException;
 
 @Configuration
@@ -19,6 +21,12 @@ import java.nio.file.AccessDeniedException;
 public class SecurityConfig {
 
     @Bean
+    public JdbcUserDetailsManager jdbcuserDetailsManager(DataSource dataSource) {
+        return new JdbcUserDetailsManager(dataSource);
+    }
+
+
+    //@Bean
     public InMemoryUserDetailsManager inMemoryUserDetailsManager(PasswordEncoder passwordEncoder){
         String encodedPassword = passwordEncoder.encode("1234");
         System.out.println(encodedPassword);
@@ -31,7 +39,7 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
         return httpSecurity
-                .formLogin(form -> form.loginPage("/login").permitAll())
+                .formLogin(form -> form.loginPage("/login").defaultSuccessUrl("/").permitAll())
                 .rememberMe(remember -> remember
                         .key("aVerySecureKey") // Change this to a real secret in production
                         .rememberMeParameter("remember-me")
